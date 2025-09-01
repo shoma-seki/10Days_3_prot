@@ -53,6 +53,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": ""Press(behavior=2)"",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""rTrigger"",
+                    ""type"": ""Button"",
+                    ""id"": ""e5496d96-9068-4d22-8440-91f360dd5f16"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press(behavior=2)"",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -88,6 +97,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""aButton"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e891b34d-e01f-4aa5-9caa-fe74d859519a"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""rTrigger"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -99,6 +119,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Player_LStick = m_Player.FindAction("LStick", throwIfNotFound: true);
         m_Player_RStick = m_Player.FindAction("RStick", throwIfNotFound: true);
         m_Player_aButton = m_Player.FindAction("aButton", throwIfNotFound: true);
+        m_Player_rTrigger = m_Player.FindAction("rTrigger", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -163,6 +184,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_LStick;
     private readonly InputAction m_Player_RStick;
     private readonly InputAction m_Player_aButton;
+    private readonly InputAction m_Player_rTrigger;
     public struct PlayerActions
     {
         private @PlayerInput m_Wrapper;
@@ -170,6 +192,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public InputAction @LStick => m_Wrapper.m_Player_LStick;
         public InputAction @RStick => m_Wrapper.m_Player_RStick;
         public InputAction @aButton => m_Wrapper.m_Player_aButton;
+        public InputAction @rTrigger => m_Wrapper.m_Player_rTrigger;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -188,6 +211,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @aButton.started += instance.OnAButton;
             @aButton.performed += instance.OnAButton;
             @aButton.canceled += instance.OnAButton;
+            @rTrigger.started += instance.OnRTrigger;
+            @rTrigger.performed += instance.OnRTrigger;
+            @rTrigger.canceled += instance.OnRTrigger;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -201,6 +227,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @aButton.started -= instance.OnAButton;
             @aButton.performed -= instance.OnAButton;
             @aButton.canceled -= instance.OnAButton;
+            @rTrigger.started -= instance.OnRTrigger;
+            @rTrigger.performed -= instance.OnRTrigger;
+            @rTrigger.canceled -= instance.OnRTrigger;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -223,5 +252,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnLStick(InputAction.CallbackContext context);
         void OnRStick(InputAction.CallbackContext context);
         void OnAButton(InputAction.CallbackContext context);
+        void OnRTrigger(InputAction.CallbackContext context);
     }
 }
