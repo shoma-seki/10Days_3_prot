@@ -21,6 +21,9 @@ public class PlayerScript : MonoBehaviour
     float shotInterval;
     [SerializeField] float kShotInterval;
 
+    //ray
+    RaycastHit hit;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -46,6 +49,20 @@ public class PlayerScript : MonoBehaviour
         Move();
         Rotate();
         DrawLineFront();
+        RayThrow();
+    }
+
+    void RayThrow()
+    {
+        int layerMask = LayerMask.GetMask("Tatami");
+        if (Physics.Raycast(position, Vector3.down, out hit, 10f, layerMask))
+        {
+            TatamiScript tatami;
+            if (hit.transform.gameObject.TryGetComponent<TatamiScript>(out tatami))
+            {
+                tatami.IsColored = true;
+            }
+        }
     }
 
     void Shot()
