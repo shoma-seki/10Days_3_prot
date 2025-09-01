@@ -16,26 +16,48 @@ public class PlayerScript : MonoBehaviour
     //line
     LineRenderer line;
 
+    //’e
+    [SerializeField] GameObject bullet;
+    float shotInterval;
+    [SerializeField] float kShotInterval;
+
     // Start is called before the first frame update
     void Start()
     {
         input = FindAnyObjectByType<InputScript>();
 
         position = transform.position;
+        aim = Vector3.forward;
 
         //line
         line = GetComponent<LineRenderer>();
+
+        //’e
+        shotInterval = kShotInterval;
     }
 
     // Update is called once per frame
     void Update()
     {
         direction = input.lStick;
-        aim = input.rStick;
+        if (input.rStick.x != 0 || input.rStick.z != 0) { aim = input.rStick; }
 
+        Shot();
         Move();
         Rotate();
         DrawLineFront();
+    }
+
+    void Shot()
+    {
+        shotInterval -= Time.deltaTime;
+        if (shotInterval < 0)
+        {
+            shotInterval = kShotInterval;
+
+            GameObject newBullet = Instantiate(bullet, transform.position, Quaternion.identity);
+            newBullet.GetComponent<BulletScript>().Setting(aim);
+        }
     }
 
     void Move()
