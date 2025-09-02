@@ -218,7 +218,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 5
   bullet: {fileID: 8369729701806695232, guid: d168db0ee3fc2164591f0e5505f8b637, type: 3}
-  kShotInterval: 1
+  kShotIntervalNormal: 0.8
+  kShotIntervalStrong: 0.4
+  kShotIntervalSuper: 0.2
+  kShotIntervalUltimate: 0.1
+  kTypeChangeInterval: 3
 --- !u!23 &449417349
 MeshRenderer:
   m_ObjectHideFlags: 0
