@@ -126,8 +126,20 @@ public class BossScript : MonoBehaviour
         //“®‚©‚·
         velocity = direction.normalized * moveSpeed;
         position += velocity * Time.deltaTime;
-        position.y = 1.88f;
+        position.y = 1.51f;
         transform.position = position;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Tatami")
+        {
+            TatamiScript tatami;
+            if (other.gameObject.TryGetComponent<TatamiScript>(out tatami))
+            {
+                tatami.IsColored = false;
+            }
+        }
     }
 
     Vector3 RotateAroundAxis(Vector3 v, float angleDeg, Vector3 axis)

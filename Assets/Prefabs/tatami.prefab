@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: -398149352714212306}
   m_Layer: 6
   m_Name: tatami
-  m_TagString: Untagged
+  m_TagString: Tatami
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -146,3 +146,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e8e1b647e87e6d46b719cc59494a68b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  num: 0
