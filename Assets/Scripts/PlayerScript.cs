@@ -74,7 +74,7 @@ public class PlayerScript : MonoBehaviour
         DrawLineFront();
         RayThrow();
 
-        Debug.Log("ShotType = " + shotType);
+        //Debug.Log("ShotType = " + shotType);
     }
 
     void RayThrow()
