@@ -19,7 +19,24 @@ public class PlayerScript : MonoBehaviour
     //弾
     [SerializeField] GameObject bullet;
     float shotInterval;
-    [SerializeField] float kShotInterval;
+    [Header("ショットタイプごとのインターバル")]
+    [SerializeField] float kShotIntervalNormal;
+    [SerializeField] float kShotIntervalStrong;
+    [SerializeField] float kShotIntervalSuper;
+    [SerializeField] float kShotIntervalUltimate;
+
+    //shotType
+    float typeChangeInterval;
+
+    [Header("ショットタイプが変わるまでのインターバル")]
+    [SerializeField] float kTypeChangeInterval;
+
+    enum ShotType
+    {
+        Normal, Strong, Super, Ultimate
+    }
+
+    ShotType shotType;
 
     //ray
     RaycastHit hit;
@@ -36,7 +53,9 @@ public class PlayerScript : MonoBehaviour
         line = GetComponent<LineRenderer>();
 
         //弾
-        shotInterval = kShotInterval;
+        shotInterval = kShotIntervalNormal;
+        typeChangeInterval = kTypeChangeInterval;
+        shotType = ShotType.Normal;
     }
 
     // Update is called once per frame
@@ -67,13 +86,75 @@ public class PlayerScript : MonoBehaviour
 
     void Shot()
     {
-        shotInterval -= Time.deltaTime;
-        if (shotInterval < 0)
+        //タイプ変更
+        typeChangeInterval -= Time.deltaTime;
+        if (typeChangeInterval < 0)
         {
-            shotInterval = kShotInterval;
+            if (shotType < ShotType.Super)
+            {
+                shotType++;
+                typeChangeInterval = kTypeChangeInterval;
+            }
+        }
 
-            GameObject newBullet = Instantiate(bullet, transform.position, Quaternion.identity);
-            newBullet.GetComponent<BulletScript>().Setting(aim);
+        //ShotTypeごとの挙動
+        switch (shotType)
+        {
+            case ShotType.Normal:
+
+                //発射
+                shotInterval -= Time.deltaTime;
+                if (shotInterval < 0)
+                {
+                    shotInterval = kShotIntervalNormal;
+
+                    GameObject newBullet = Instantiate(bullet, transform.position, Quaternion.identity);
+                    newBullet.GetComponent<BulletScript>().Setting(aim);
+                }
+
+                break;
+
+            case ShotType.Strong:
+
+                //発射
+                shotInterval -= Time.deltaTime;
+                if (shotInterval < 0)
+                {
+                    shotInterval = kShotIntervalStrong;
+
+                    GameObject newBullet = Instantiate(bullet, transform.position, Quaternion.identity);
+                    newBullet.GetComponent<BulletScript>().Setting(aim);
+                }
+
+                break;
+
+            case ShotType.Super:
+
+                //発射
+                shotInterval -= Time.deltaTime;
+                if (shotInterval < 0)
+                {
+                    shotInterval = kShotIntervalSuper;
+
+                    GameObject newBullet = Instantiate(bullet, transform.position, Quaternion.identity);
+                    newBullet.GetComponent<BulletScript>().Setting(aim);
+                }
+
+                break;
+
+            case ShotType.Ultimate:
+
+                //発射
+                shotInterval -= Time.deltaTime;
+                if (shotInterval < 0)
+                {
+                    shotInterval = kShotIntervalUltimate;
+
+                    GameObject newBullet = Instantiate(bullet, transform.position, Quaternion.identity);
+                    newBullet.GetComponent<BulletScript>().Setting(aim);
+                }
+
+                break;
         }
     }
 
