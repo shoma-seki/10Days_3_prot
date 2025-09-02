@@ -35,6 +35,10 @@ public class BossScript : MonoBehaviour
     [SerializeField] float kShotInterval;
     int shotCount;
 
+    //HPŠÖ˜A
+    bool isDamage;
+    Color color;
+
     //float phaseInterval;
     //[SerializeField] float kPhaseInterval;
 
@@ -54,6 +58,7 @@ public class BossScript : MonoBehaviour
     {
         PhaseChange();
         Phase();
+        Damage();
     }
 
     void PhaseChange()
@@ -179,6 +184,19 @@ public class BossScript : MonoBehaviour
         }
     }
 
+    void Damage()
+    {
+        if (isDamage)
+        {
+            isDamage = false;
+            color = Color.white;
+        }
+
+        color = Color.Lerp(color, Color.red, 5f * Time.deltaTime);
+        MeshRenderer meshRenderer = GetComponent<MeshRenderer>();
+        meshRenderer.material.color = color;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Tatami")
@@ -188,6 +206,11 @@ public class BossScript : MonoBehaviour
             {
                 tatami.IsColored = false;
             }
+        }
+
+        if (other.tag == "Bullet")
+        {
+            isDamage = true;
         }
     }
 

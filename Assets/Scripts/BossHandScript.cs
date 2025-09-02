@@ -43,4 +43,12 @@ public class BossHandScript : MonoBehaviour
         this.direction = direction;
         this.speed = speed;
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            Destroy(gameObject);
+        }
+    }
 }

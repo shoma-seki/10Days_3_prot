@@ -35,4 +35,12 @@ public class BulletScript : MonoBehaviour
     {
         this.direction = direction;
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Boss")
+        {
+            Destroy(gameObject);
+        }
+    }
 }

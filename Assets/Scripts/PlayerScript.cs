@@ -45,6 +45,15 @@ public class PlayerScript : MonoBehaviour
     string nowTatami;
     string preTatami;
 
+    //ノックバック
+    bool isKnockBack;
+    Vector3 knockBackDirection;
+    float knockBackPower;
+    [Header("ノックバック")]
+    [SerializeField] float kKnockBackPower;
+    float knockBackTime;
+    [SerializeField] float kKnockBackTime;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -73,6 +82,7 @@ public class PlayerScript : MonoBehaviour
         Rotate();
         DrawLineFront();
         RayThrow();
+        KnockBack();
 
         //Debug.Log("ShotType = " + shotType);
     }
@@ -180,9 +190,12 @@ public class PlayerScript : MonoBehaviour
 
     void Move()
     {
-        velocity = direction * speed;
-        position += velocity * Time.deltaTime;
-        transform.position = position;
+        if (!isKnockBack)
+        {
+            velocity = direction * speed;
+            position += velocity * Time.deltaTime;
+            transform.position = position;
+        }
     }
 
     void Rotate()
@@ -195,5 +208,34 @@ public class PlayerScript : MonoBehaviour
         //前に線を描画
         line.SetPosition(0, transform.position);
         line.SetPosition(1, transform.position + aim * 10f);
+    }
+
+    void KnockBack()
+    {
+        if (isKnockBack)
+        {
+            knockBackTime -= Time.deltaTime;
+            if (knockBackTime < 0)
+            {
+                isKnockBack = false;
+            }
+
+            velocity = knockBackDirection * knockBackPower;
+            position += velocity * Time.deltaTime;
+
+            knockBackPower -= 15f * Time.deltaTime;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Hand")
+        {
+            isKnockBack = true;
+            knockBackPower = kKnockBackPower;
+            knockBackTime = kKnockBackTime;
+            knockBackDirection = (transform.position - other.transform.position).normalized;
+            knockBackDirection.y = 0;
+        }
     }
 }
