@@ -93,7 +93,10 @@ public class PlayerScript : MonoBehaviour
 
             if (preTatami != nowTatami)
             {
-                shotType = ShotType.Normal;
+                if (shotType > ShotType.Normal)
+                {
+                    shotType--;
+                }
                 typeChangeInterval = kTypeChangeInterval;
             }
 

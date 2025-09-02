@@ -23,7 +23,7 @@ public class TatamiScript : MonoBehaviour
     {
         if (isColored)
         {
-            meshRenderer.material.color = Color.red;
+            meshRenderer.material.color = Color.blue;
         }
         else
         {
