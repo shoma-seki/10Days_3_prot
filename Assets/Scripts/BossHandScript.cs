@@ -9,7 +9,7 @@ public class BossHandScript : MonoBehaviour
     Vector3 velocity;
     float speed;
 
-    float aliveTime = 2f;
+    float aliveTime = 3.5f;
 
     // Start is called before the first frame update
     void Start()

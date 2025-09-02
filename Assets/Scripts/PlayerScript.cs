@@ -222,6 +222,7 @@ public class PlayerScript : MonoBehaviour
 
             velocity = knockBackDirection * knockBackPower;
             position += velocity * Time.deltaTime;
+            transform.position = position;
 
             knockBackPower -= 15f * Time.deltaTime;
         }
