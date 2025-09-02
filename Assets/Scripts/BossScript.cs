@@ -21,10 +21,19 @@ public class BossScript : MonoBehaviour
     bool GoNextPhase;
 
     //Move
-    [Header("Moveフェーズ")]
     float moveTime;
+    [Header("Moveフェーズ")]
     [SerializeField] float kMoveTime;
     [SerializeField] float moveSpeed;
+
+    //Shot
+    [Header("Shotフェーズ")]
+    [SerializeField] GameObject hand;
+    Vector3 shotDirection;
+    [SerializeField] float shotSpeed;
+    float shotInterval;
+    [SerializeField] float kShotInterval;
+    int shotCount;
 
     //float phaseInterval;
     //[SerializeField] float kPhaseInterval;
@@ -56,17 +65,23 @@ public class BossScript : MonoBehaviour
 
             if (attackFase == AttackFase.None || attackFase == AttackFase.Move)
             {
-                int rand = Random.Range(0, 1000);
-                if (rand < 500)
-                {
-                    attackFase = AttackFase.Shot;
-                }
-                else
-                {
-                    attackFase = AttackFase.Rush;
-                }
+                //int rand = Random.Range(0, 1000);
+                //if (rand < 500)
+                //{
+                //    attackFase = AttackFase.Shot;
+                //    shotInterval = kShotInterval;
+                //}
+                //else
+                //{
+                //    attackFase = AttackFase.Rush;
+                //}
+
+                attackFase = AttackFase.Shot;
+                shotInterval = kShotInterval;
+                shotCount = 0;
+
+                GoNextPhase = false;
             }
-            GoNextPhase = false;
         }
 
         if (GoNextPhase)
@@ -74,8 +89,10 @@ public class BossScript : MonoBehaviour
             if (attackFase == AttackFase.Shot || attackFase == AttackFase.Rush)
             {
                 attackFase = AttackFase.Move;
+                moveTime = kMoveTime;
+
+                GoNextPhase = false;
             }
-            GoNextPhase = false;
         }
     }
 
@@ -97,7 +114,7 @@ public class BossScript : MonoBehaviour
 
             case AttackFase.Shot:
 
-
+                ShotPhase();
 
                 break;
 
@@ -114,7 +131,17 @@ public class BossScript : MonoBehaviour
         if (moveTime == kMoveTime)
         {
             Vector3 eToPDirection = (player.transform.position - transform.position).normalized;
-            direction = RotateAroundAxis(eToPDirection.normalized, 30, Vector3.up);
+            int rand = Random.Range(0, 1000);
+            float angle;
+            if (rand < 500)
+            {
+                angle = 30;
+            }
+            else
+            {
+                angle = -30;
+            }
+            direction = RotateAroundAxis(eToPDirection.normalized, angle, Vector3.up);
         }
 
         moveTime -= Time.deltaTime;
@@ -128,6 +155,28 @@ public class BossScript : MonoBehaviour
         position += velocity * Time.deltaTime;
         position.y = 1.51f;
         transform.position = position;
+    }
+
+    void ShotPhase()
+    {
+        shotInterval -= Time.deltaTime;
+        if (shotInterval < 0)
+        {
+            shotCount++;
+            shotInterval = kShotInterval;
+
+            //発射
+            shotDirection = (player.transform.position - transform.position).normalized;
+            shotDirection.y = 0;
+
+            GameObject newHand = Instantiate(hand, transform.position, Quaternion.identity);
+            newHand.GetComponent<BossHandScript>().Setting(shotDirection.normalized, shotSpeed);
+        }
+
+        if (shotCount > 3)
+        {
+            GoNextPhase = true;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
