@@ -41,6 +41,10 @@ public class PlayerScript : MonoBehaviour
     //ray
     RaycastHit hit;
 
+    //チェインを切る
+    string nowTatami;
+    string preTatami;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -69,6 +73,8 @@ public class PlayerScript : MonoBehaviour
         Rotate();
         DrawLineFront();
         RayThrow();
+
+        Debug.Log("ShotType = " + shotType);
     }
 
     void RayThrow()
@@ -81,6 +87,17 @@ public class PlayerScript : MonoBehaviour
             {
                 tatami.IsColored = true;
             }
+
+            //チェインを切る
+            nowTatami = tatami.name;
+
+            if (preTatami != nowTatami)
+            {
+                shotType = ShotType.Normal;
+                typeChangeInterval = kTypeChangeInterval;
+            }
+
+            preTatami = nowTatami;
         }
     }
 
@@ -90,7 +107,7 @@ public class PlayerScript : MonoBehaviour
         typeChangeInterval -= Time.deltaTime;
         if (typeChangeInterval < 0)
         {
-            if (shotType < ShotType.Super)
+            if (shotType < ShotType.Ultimate)
             {
                 shotType++;
                 typeChangeInterval = kTypeChangeInterval;
