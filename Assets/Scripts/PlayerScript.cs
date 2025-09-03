@@ -232,11 +232,16 @@ public class PlayerScript : MonoBehaviour
     {
         if (other.tag == "Hand")
         {
-            isKnockBack = true;
-            knockBackPower = kKnockBackPower;
-            knockBackTime = kKnockBackTime;
-            knockBackDirection = (transform.position - other.transform.position).normalized;
-            knockBackDirection.y = 0;
+            KnockBackOn((transform.position - other.transform.position).normalized);
         }
+    }
+
+    public void KnockBackOn(Vector3 direction)
+    {
+        isKnockBack = true;
+        knockBackPower = kKnockBackPower;
+        knockBackTime = kKnockBackTime;
+        knockBackDirection = direction.normalized;
+        knockBackDirection.y = 0;
     }
 }

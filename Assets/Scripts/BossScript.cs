@@ -12,13 +12,18 @@ public class BossScript : MonoBehaviour
     PlayerScript player;
 
     //攻撃フェーズ
-    enum AttackFase
+    enum AttackPhase
     {
-        None, Move, Shot, Rush
+        None, Move, Shot, RushPrepare, Rush
     }
 
-    AttackFase attackFase;
+    AttackPhase attackPhase;
     bool GoNextPhase;
+
+    //None
+    float noneTime;
+    [Header("Noneフェーズ")]
+    [SerializeField] float kNoneTime;
 
     //Move
     float moveTime;
@@ -35,6 +40,21 @@ public class BossScript : MonoBehaviour
     [SerializeField] float kShotInterval;
     int shotCount;
 
+    //RusPrepare
+    float rushPrepareTime;
+    [Header("RushPrepareフェーズ")]
+    [SerializeField] float kRushPrepareTime;
+
+    //Rush
+    float rushTime;
+    float rushSpeed;
+    Vector3 rushDirection;
+    bool isRush;
+    public bool IsRush { get { return isRush; } }
+    [Header("Rushフェーズ")]
+    [SerializeField] float kRushTime;
+    [SerializeField] float kRushSpeed;
+
     //HP関連
     bool isDamage;
     Color color;
@@ -46,7 +66,7 @@ public class BossScript : MonoBehaviour
     void Start()
     {
         player = FindAnyObjectByType<PlayerScript>();
-        attackFase = AttackFase.Move;
+        attackPhase = AttackPhase.Move;
 
         position = transform.position;
 
@@ -56,9 +76,12 @@ public class BossScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log("attackPhase = " + attackPhase);
+
         PhaseChange();
         Phase();
         Damage();
+        Rotate();
     }
 
     void PhaseChange()
@@ -68,22 +91,24 @@ public class BossScript : MonoBehaviour
         {
             //phaseInterval = kPhaseInterval;
 
-            if (attackFase == AttackFase.None || attackFase == AttackFase.Move)
+            if (attackPhase == AttackPhase.None || attackPhase == AttackPhase.Move)
             {
-                //int rand = Random.Range(0, 1000);
-                //if (rand < 500)
-                //{
-                //    attackFase = AttackFase.Shot;
-                //    shotInterval = kShotInterval;
-                //}
-                //else
-                //{
-                //    attackFase = AttackFase.Rush;
-                //}
+                int rand = Random.Range(0, 1000);
+                if (rand < 500)
+                {
+                    attackPhase = AttackPhase.Shot;
+                    shotInterval = kShotInterval;
+                    shotCount = 0;
+                }
+                else
+                {
+                    attackPhase = AttackPhase.RushPrepare;
+                    rushPrepareTime = kRushPrepareTime;
+                }
 
-                attackFase = AttackFase.Shot;
-                shotInterval = kShotInterval;
-                shotCount = 0;
+                //attackFase = AttackFase.Shot;
+                //shotInterval = kShotInterval;
+                //shotCount = 0;
 
                 GoNextPhase = false;
             }
@@ -91,9 +116,9 @@ public class BossScript : MonoBehaviour
 
         if (GoNextPhase)
         {
-            if (attackFase == AttackFase.Shot || attackFase == AttackFase.Rush)
+            if (attackPhase == AttackPhase.Shot || attackPhase == AttackPhase.Rush)
             {
-                attackFase = AttackFase.Move;
+                attackPhase = AttackPhase.Move;
                 moveTime = kMoveTime;
 
                 GoNextPhase = false;
@@ -103,31 +128,72 @@ public class BossScript : MonoBehaviour
 
     void Phase()
     {
-        switch (attackFase)
+        switch (attackPhase)
         {
-            case AttackFase.None:
+            case AttackPhase.None:
 
-
+                NonePhase();
 
                 break;
 
-            case AttackFase.Move:
+            case AttackPhase.Move:
 
                 MovePhase();
 
                 break;
 
-            case AttackFase.Shot:
+            case AttackPhase.Shot:
 
                 ShotPhase();
 
                 break;
 
-            case AttackFase.Rush:
+            case AttackPhase.RushPrepare:
 
-
+                RushPreparePhase();
 
                 break;
+
+            case AttackPhase.Rush:
+
+                RushPhase();
+
+                break;
+        }
+    }
+
+    void RushPreparePhase()
+    {
+        rushPrepareTime -= Time.deltaTime;
+        if (rushPrepareTime < 0)
+        {
+            attackPhase = AttackPhase.Rush;
+            rushDirection = (player.transform.position - transform.position).normalized;
+            rushDirection.y = 0;
+            rushTime = kRushTime;
+            rushSpeed = kRushSpeed;
+        }
+    }
+
+    void RushPhase()
+    {
+        rushTime -= Time.deltaTime;
+        if (rushTime < 0)
+        {
+            GoNextPhase = true;
+        }
+
+        velocity = rushDirection * rushSpeed;
+        position += velocity * Time.deltaTime;
+        transform.position = position;
+    }
+
+    void NonePhase()
+    {
+        noneTime -= Time.deltaTime;
+        if (noneTime < 0)
+        {
+            GoNextPhase = true;
         }
     }
 
@@ -211,6 +277,25 @@ public class BossScript : MonoBehaviour
         if (other.tag == "Bullet")
         {
             isDamage = true;
+        }
+
+        if (other.tag == "Player")
+        {
+            PlayerScript player;
+            if (other.TryGetComponent<PlayerScript>(out player))
+            {
+                player.KnockBackOn((player.transform.position - transform.position).normalized);
+                attackPhase = AttackPhase.None;
+            }
+        }
+    }
+
+    void Rotate()
+    {
+        transform.rotation = Quaternion.LookRotation(velocity.normalized);
+        if (attackPhase == AttackPhase.Shot)
+        {
+            transform.rotation = Quaternion.LookRotation(shotDirection.normalized);
         }
     }
 
