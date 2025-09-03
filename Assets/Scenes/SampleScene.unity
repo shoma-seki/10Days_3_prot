@@ -2130,6 +2130,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -7373917139245912798, guid: 51cea913d1a6322429c9d71eb0d2e132, type: 3}
+      propertyPath: kNoneTime
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -7373917139245912798, guid: 51cea913d1a6322429c9d71eb0d2e132, type: 3}
       propertyPath: kRushTime
       value: 1
       objectReference: {fileID: 0}

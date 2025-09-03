@@ -286,6 +286,7 @@ public class BossScript : MonoBehaviour
             {
                 player.KnockBackOn((player.transform.position - transform.position).normalized);
                 attackPhase = AttackPhase.None;
+                noneTime = kNoneTime;
             }
         }
     }
