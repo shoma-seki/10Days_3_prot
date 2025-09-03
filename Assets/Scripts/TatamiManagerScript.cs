@@ -6,6 +6,7 @@ public class TatamiManagerScript : MonoBehaviour
 {
     TatamiScript[] tatamis;
     int tatamiCount;
+    public int TatamiCount { get { return tatamiCount; } }
 
     // Start is called before the first frame update
     void Start()
@@ -24,7 +25,7 @@ public class TatamiManagerScript : MonoBehaviour
             }
         }
 
-        Debug.Log("tatamiCount = " + tatamiCount);
+        //Debug.Log("tatamiCount = " + tatamiCount);
     }
 
     private void LateUpdate()

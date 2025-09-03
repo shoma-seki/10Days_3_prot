@@ -393,6 +393,9 @@ MonoBehaviour:
   kTypeChangeInterval: 3
   kKnockBackPower: 15
   kKnockBackTime: 0.3
+  maxTatamiNum: 25
+  typeChangeIntervalMax: 1
+  typeChangeIntervalMin: 3
 --- !u!23 &449417349
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1871,7 +1874,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1437557706600983624, guid: dd5f0bf9dcc0381498449b0f26763d2c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.1299996
+      value: 6.14
       objectReference: {fileID: 0}
     - target: {fileID: 1437557706600983624, guid: dd5f0bf9dcc0381498449b0f26763d2c, type: 3}
       propertyPath: m_LocalPosition.y

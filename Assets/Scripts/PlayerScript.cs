@@ -55,7 +55,12 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] float kKnockBackTime;
 
     //êwéÊÇË
-
+    [SerializeField] int maxTatamiNum;
+    int tatamiCount;
+    TatamiManagerScript tatamiManager;
+    [Header("É`ÉFÉCÉìÇÃä‘äuÇÃMinMax")]
+    [SerializeField] float typeChangeIntervalMax;
+    [SerializeField] float typeChangeIntervalMin;
 
     // Start is called before the first frame update
     void Start()
@@ -72,6 +77,9 @@ public class PlayerScript : MonoBehaviour
         shotInterval = kShotIntervalNormal;
         typeChangeInterval = kTypeChangeInterval;
         shotType = ShotType.Normal;
+
+        //êwéÊÇË
+        tatamiManager = FindAnyObjectByType<TatamiManagerScript>();
     }
 
     // Update is called once per frame
@@ -79,6 +87,8 @@ public class PlayerScript : MonoBehaviour
     {
         direction = input.lStick;
         if (input.rStick.x != 0 || input.rStick.z != 0) { aim = input.rStick; }
+
+        TatamiPowerUp();
 
         Shot();
         Move();
@@ -229,6 +239,17 @@ public class PlayerScript : MonoBehaviour
 
             knockBackPower -= 15f * Time.deltaTime;
         }
+    }
+
+    void TatamiPowerUp()
+    {
+        tatamiCount = tatamiManager.TatamiCount;
+
+        float powerUpPercent = (float)tatamiCount / (float)maxTatamiNum;
+        kTypeChangeInterval = Mathf.Lerp(typeChangeIntervalMin, typeChangeIntervalMax, powerUpPercent);
+
+        Debug.Log("powerUpPercent = " + powerUpPercent);
+        Debug.Log("kTypeChangeInterval = " + kTypeChangeInterval);
     }
 
     private void OnTriggerEnter(Collider other)
