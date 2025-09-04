@@ -2173,6 +2173,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8147625915695700083, guid: a7ef4d966e8c1e145897c534f779339a, type: 3}
     - target: {fileID: -7373917139245912798, guid: 51cea913d1a6322429c9d71eb0d2e132, type: 3}
+      propertyPath: jumpSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: -7373917139245912798, guid: 51cea913d1a6322429c9d71eb0d2e132, type: 3}
       propertyPath: kMoveTime
       value: 2
       objectReference: {fileID: 0}
@@ -2197,12 +2201,32 @@ PrefabInstance:
       value: 15
       objectReference: {fileID: 0}
     - target: {fileID: -7373917139245912798, guid: 51cea913d1a6322429c9d71eb0d2e132, type: 3}
+      propertyPath: stompSpeed
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: -7373917139245912798, guid: 51cea913d1a6322429c9d71eb0d2e132, type: 3}
       propertyPath: kShotInterval
       value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: -7373917139245912798, guid: 51cea913d1a6322429c9d71eb0d2e132, type: 3}
+      propertyPath: maxStompCount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7373917139245912798, guid: 51cea913d1a6322429c9d71eb0d2e132, type: 3}
+      propertyPath: kStompMoveTime
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -7373917139245912798, guid: 51cea913d1a6322429c9d71eb0d2e132, type: 3}
+      propertyPath: stompMoveSpeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7373917139245912798, guid: 51cea913d1a6322429c9d71eb0d2e132, type: 3}
       propertyPath: kRushPrepareTime
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -7373917139245912798, guid: 51cea913d1a6322429c9d71eb0d2e132, type: 3}
+      propertyPath: startAttackPhase
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2602566221025298284, guid: 51cea913d1a6322429c9d71eb0d2e132, type: 3}
       propertyPath: m_Name

@@ -14,7 +14,7 @@ public class BossScript : MonoBehaviour
     //攻撃フェーズ
     enum AttackPhase
     {
-        None, Move, Shot, RushPrepare, Rush
+        None, Move, Shot, RushPrepare, Rush, Stomp
     }
 
     AttackPhase attackPhase;
@@ -55,9 +55,28 @@ public class BossScript : MonoBehaviour
     [SerializeField] float kRushTime;
     [SerializeField] float kRushSpeed;
 
+    //Stomp
+    enum StompPP
+    {
+        Jump, Move, Stomp
+    }
+    StompPP stompPhase;
+    bool isStomp;
+    float stompMoveTime;
+    int stompCount;
+    [Header("Stompフェーズ")]
+    [SerializeField] int maxStompCount;
+    [SerializeField] float kStompMoveTime;
+    [SerializeField] float stompMoveSpeed;
+    [SerializeField] float jumpSpeed;
+    [SerializeField] float stompSpeed;
+
     //HP関連
     bool isDamage;
     Color color;
+
+    //アタックフェーズ操作
+    [SerializeField] AttackPhase startAttackPhase;
 
     //float phaseInterval;
     //[SerializeField] float kPhaseInterval;
@@ -66,7 +85,7 @@ public class BossScript : MonoBehaviour
     void Start()
     {
         player = FindAnyObjectByType<PlayerScript>();
-        attackPhase = AttackPhase.Move;
+        attackPhase = startAttackPhase;
 
         position = transform.position;
 
@@ -76,7 +95,7 @@ public class BossScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log("attackPhase = " + attackPhase);
+        Debug.Log("attackPhase = " + attackPhase);
 
         PhaseChange();
         Phase();
@@ -86,29 +105,28 @@ public class BossScript : MonoBehaviour
 
     void PhaseChange()
     {
-        //phaseInterval -= Time.deltaTime;
         if (GoNextPhase)
         {
-            //phaseInterval = kPhaseInterval;
-
-            if (attackPhase == AttackPhase.None || attackPhase == AttackPhase.Move)
+            if (attackPhase == AttackPhase.Move)
             {
-                int rand = Random.Range(0, 1000);
+                int rand = Random.Range(0, 1500);
                 if (rand < 500)
                 {
                     attackPhase = AttackPhase.Shot;
                     shotInterval = kShotInterval;
                     shotCount = 0;
                 }
-                else
+                else if (rand < 1000)
                 {
                     attackPhase = AttackPhase.RushPrepare;
                     rushPrepareTime = kRushPrepareTime;
                 }
-
-                //attackFase = AttackFase.Shot;
-                //shotInterval = kShotInterval;
-                //shotCount = 0;
+                else
+                {
+                    attackPhase = AttackPhase.Stomp;
+                    stompCount = 0;
+                    stompPhase = StompPP.Jump;
+                }
 
                 GoNextPhase = false;
             }
@@ -116,7 +134,7 @@ public class BossScript : MonoBehaviour
 
         if (GoNextPhase)
         {
-            if (attackPhase == AttackPhase.Shot || attackPhase == AttackPhase.Rush)
+            if (attackPhase == AttackPhase.None || attackPhase == AttackPhase.Shot || attackPhase == AttackPhase.Rush || attackPhase == AttackPhase.Stomp)
             {
                 attackPhase = AttackPhase.Move;
                 moveTime = kMoveTime;
@@ -157,6 +175,12 @@ public class BossScript : MonoBehaviour
             case AttackPhase.Rush:
 
                 RushPhase();
+
+                break;
+
+            case AttackPhase.Stomp:
+
+                StompPhase();
 
                 break;
         }
@@ -250,6 +274,69 @@ public class BossScript : MonoBehaviour
         }
     }
 
+    void StompPhase()
+    {
+        //Debug.Log("stompPhase = " + stompPhase);
+
+        switch (stompPhase)
+        {
+            case StompPP.Jump:
+
+                if (position.y < 8)
+                {
+                    position.y += jumpSpeed * Time.deltaTime;
+                    transform.position = position;
+                }
+                else
+                {
+                    stompPhase = StompPP.Move;
+                    stompMoveTime = kStompMoveTime;
+                }
+
+                break;
+
+            case StompPP.Move:
+
+                //移動
+                Vector3 playerSkyPos = player.transform.position;
+                playerSkyPos.y = position.y;
+                position = Vector3.Lerp(transform.position, playerSkyPos, stompMoveSpeed * Time.deltaTime);
+                transform.position = position;
+
+                //時間
+                stompMoveTime -= Time.deltaTime;
+                if (stompMoveTime < 0)
+                {
+                    stompPhase = StompPP.Stomp;
+                }
+
+                break;
+
+            case StompPP.Stomp:
+
+                position.y -= stompSpeed * Time.deltaTime;
+                transform.position = position;
+
+                if (isStomp)
+                {
+                    isStomp = false;
+                    stompCount++;
+
+                    if (stompCount >= maxStompCount)
+                    {
+                        GoNextPhase = true;
+                    }
+                    else
+                    {
+                        stompPhase = StompPP.Jump;
+                    }
+
+                }
+
+                break;
+        }
+    }
+
     void Damage()
     {
         if (isDamage)
@@ -271,6 +358,11 @@ public class BossScript : MonoBehaviour
             if (other.gameObject.TryGetComponent<TatamiScript>(out tatami))
             {
                 tatami.IsColored = false;
+            }
+
+            if (stompPhase == StompPP.Stomp)
+            {
+                isStomp = true;
             }
         }
 

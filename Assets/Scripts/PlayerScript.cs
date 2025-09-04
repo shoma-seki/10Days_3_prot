@@ -248,8 +248,8 @@ public class PlayerScript : MonoBehaviour
         float powerUpPercent = (float)tatamiCount / (float)maxTatamiNum;
         kTypeChangeInterval = Mathf.Lerp(typeChangeIntervalMin, typeChangeIntervalMax, powerUpPercent);
 
-        Debug.Log("powerUpPercent = " + powerUpPercent);
-        Debug.Log("kTypeChangeInterval = " + kTypeChangeInterval);
+        //Debug.Log("powerUpPercent = " + powerUpPercent);
+        //Debug.Log("kTypeChangeInterval = " + kTypeChangeInterval);
     }
 
     private void OnTriggerEnter(Collider other)
