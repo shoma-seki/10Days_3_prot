@@ -14,7 +14,7 @@ public class BossScript : MonoBehaviour
     //攻撃フェーズ
     enum AttackPhase
     {
-        None, Move, Shot, RushPrepare, Rush, Stomp
+        None, Move, Shot, RushPrepare, Rush, Stomp, Shiko
     }
 
     AttackPhase attackPhase;
@@ -71,6 +71,18 @@ public class BossScript : MonoBehaviour
     [SerializeField] float jumpSpeed;
     [SerializeField] float stompSpeed;
 
+    //Shiko
+    bool DidShiko;
+    float shikoWaitTime;
+    float shikoChangeTime;
+    [Header("Shikoフェーズ")]
+    [SerializeField] GameObject child;
+    [SerializeField] float kShikoWaitTime;
+    [SerializeField] float kShikoChangeTime;
+    [SerializeField] int maxGenerateCount;
+    [SerializeField] float genRange;
+    [SerializeField] float genHeight;
+
     //HP関連
     bool isDamage;
     Color color;
@@ -90,6 +102,9 @@ public class BossScript : MonoBehaviour
         position = transform.position;
 
         moveTime = kMoveTime;
+
+        shikoWaitTime = kShikoWaitTime;
+        shikoChangeTime = kShikoChangeTime;
     }
 
     // Update is called once per frame
@@ -109,7 +124,7 @@ public class BossScript : MonoBehaviour
         {
             if (attackPhase == AttackPhase.Move)
             {
-                int rand = Random.Range(0, 1500);
+                int rand = Random.Range(0, 2000);
                 if (rand < 500)
                 {
                     attackPhase = AttackPhase.Shot;
@@ -121,11 +136,18 @@ public class BossScript : MonoBehaviour
                     attackPhase = AttackPhase.RushPrepare;
                     rushPrepareTime = kRushPrepareTime;
                 }
-                else
+                else if (rand < 1500)
                 {
                     attackPhase = AttackPhase.Stomp;
                     stompCount = 0;
                     stompPhase = StompPP.Jump;
+                }
+                else
+                {
+                    attackPhase = AttackPhase.Shiko;
+                    shikoWaitTime = kShikoWaitTime;
+                    shikoChangeTime = kShikoChangeTime;
+                    DidShiko = false;
                 }
 
                 GoNextPhase = false;
@@ -134,7 +156,9 @@ public class BossScript : MonoBehaviour
 
         if (GoNextPhase)
         {
-            if (attackPhase == AttackPhase.None || attackPhase == AttackPhase.Shot || attackPhase == AttackPhase.Rush || attackPhase == AttackPhase.Stomp)
+            if (attackPhase == AttackPhase.None || attackPhase == AttackPhase.Shot
+                || attackPhase == AttackPhase.Rush || attackPhase == AttackPhase.Stomp
+                || attackPhase == AttackPhase.Shiko)
             {
                 attackPhase = AttackPhase.Move;
                 moveTime = kMoveTime;
@@ -181,6 +205,12 @@ public class BossScript : MonoBehaviour
             case AttackPhase.Stomp:
 
                 StompPhase();
+
+                break;
+
+            case AttackPhase.Shiko:
+
+                ShikoPhase();
 
                 break;
         }
@@ -334,6 +364,37 @@ public class BossScript : MonoBehaviour
                 }
 
                 break;
+        }
+    }
+
+    void ShikoPhase()
+    {
+        shikoWaitTime -= Time.deltaTime;
+        if (shikoWaitTime < 0 && !DidShiko)
+        {
+            for (int i = 0; i < maxGenerateCount; i++)
+            {
+                Vector3 genDirection = new Vector3();
+                genDirection.x = Random.Range(-100, 100);
+                genDirection.z = Random.Range(-100, 100);
+                genDirection = genDirection.normalized;
+
+                Vector3 genPosition = transform.position + genDirection * genRange;
+                genPosition.y = genHeight;
+
+                Instantiate(child, genPosition, Quaternion.identity);
+            }
+
+            DidShiko = true;
+        }
+
+        if (DidShiko)
+        {
+            shikoChangeTime -= Time.deltaTime;
+            if (shikoChangeTime < 0)
+            {
+                GoNextPhase = true;
+            }
         }
     }
 

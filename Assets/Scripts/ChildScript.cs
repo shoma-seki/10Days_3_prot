@@ -51,6 +51,7 @@ public class ChildScript : MonoBehaviour
                 if (speed < accel) { speed += accel * Time.deltaTime; }
 
                 direction = (player.transform.position - transform.position).normalized;
+                direction.y = 0;
                 velocity = direction.normalized * speed;
                 position += velocity * Time.deltaTime;
 
@@ -65,6 +66,11 @@ public class ChildScript : MonoBehaviour
         if (other.tag == "Tatami")
         {
             phase = Phase.Chase;
+        }
+
+        if (other.tag == "Player")
+        {
+            Destroy(gameObject);
         }
     }
 }

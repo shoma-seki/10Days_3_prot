@@ -258,6 +258,11 @@ public class PlayerScript : MonoBehaviour
         {
             KnockBackOn((transform.position - other.transform.position).normalized);
         }
+
+        if (other.tag == "Child")
+        {
+            KnockBackOn((transform.position - other.transform.position).normalized);
+        }
     }
 
     public void KnockBackOn(Vector3 direction)
