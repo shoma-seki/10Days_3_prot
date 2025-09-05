@@ -86,6 +86,10 @@ public class BossScript : MonoBehaviour
     //HP関連
     bool isDamage;
     Color color;
+    [Header("HP関連")]
+    [SerializeField] int startHP;
+    int hp;
+    public int HP { get { return hp; } }
 
     //アタックフェーズ操作
     [SerializeField] AttackPhase startAttackPhase;
@@ -94,7 +98,7 @@ public class BossScript : MonoBehaviour
     //[SerializeField] float kPhaseInterval;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         player = FindAnyObjectByType<PlayerScript>();
         attackPhase = startAttackPhase;
@@ -105,6 +109,8 @@ public class BossScript : MonoBehaviour
 
         shikoWaitTime = kShikoWaitTime;
         shikoChangeTime = kShikoChangeTime;
+
+        hp = startHP;
     }
 
     // Update is called once per frame
@@ -405,6 +411,7 @@ public class BossScript : MonoBehaviour
         {
             isDamage = false;
             color = Color.white;
+            hp--;
         }
 
         color = Color.Lerp(color, Color.red, 5f * Time.deltaTime);

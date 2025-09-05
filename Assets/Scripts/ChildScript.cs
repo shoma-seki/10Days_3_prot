@@ -66,6 +66,7 @@ public class ChildScript : MonoBehaviour
         if (other.tag == "Tatami")
         {
             phase = Phase.Chase;
+            position.y = 0.6f;
         }
 
         if (other.tag == "Player")
