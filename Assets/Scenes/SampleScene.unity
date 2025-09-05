@@ -2250,7 +2250,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -7373917139245912798, guid: 51cea913d1a6322429c9d71eb0d2e132, type: 3}
       propertyPath: startAttackPhase
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2602566221025298284, guid: 51cea913d1a6322429c9d71eb0d2e132, type: 3}
       propertyPath: m_Name

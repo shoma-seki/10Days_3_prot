@@ -110,7 +110,7 @@ public class BossScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("attackPhase = " + attackPhase);
+        //Debug.Log("attackPhase = " + attackPhase);
 
         PhaseChange();
         Phase();
@@ -306,7 +306,7 @@ public class BossScript : MonoBehaviour
 
     void StompPhase()
     {
-        //Debug.Log("stompPhase = " + stompPhase);
+        Debug.Log("stompPhase = " + stompPhase);
 
         switch (stompPhase)
         {
@@ -338,6 +338,7 @@ public class BossScript : MonoBehaviour
                 if (stompMoveTime < 0)
                 {
                     stompPhase = StompPP.Stomp;
+                    isStomp = false;
                 }
 
                 break;
