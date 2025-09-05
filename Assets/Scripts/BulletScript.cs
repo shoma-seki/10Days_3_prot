@@ -42,5 +42,10 @@ public class BulletScript : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        if (other.tag == "Child")
+        {
+            Destroy(gameObject);
+        }
     }
 }

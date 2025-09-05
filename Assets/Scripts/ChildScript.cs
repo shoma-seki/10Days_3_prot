@@ -72,5 +72,10 @@ public class ChildScript : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        if (other.tag == "Bullet")
+        {
+            Destroy(gameObject);
+        }
     }
 }
